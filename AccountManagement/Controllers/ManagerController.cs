@@ -22,41 +22,39 @@ namespace AccountManagement.Controllers
         [HttpGet]
         public IEnumerable<Manager> Get()
         {
-                Manager m = new Manager()
-                {
-                    Name = "manager",
-                    Active = true
-                };
-
-                db.Managers.Add(m);
-                db.SaveChanges();
-            return db.Managers;
+            return db.Managers.Where(m => m.Active);
         }
 
         // GET: api/Manager/5
         [HttpGet("{id}", Name = "Get")]
         public Manager Get(int id)
         {
-            return db.Managers.Where(m => m.ID == id).FirstOrDefault();
+            Manager man = db.Managers.Where(m => m.UserID == id).FirstOrDefault();
+            if (man != null)
+                if(man.Active)
+                    return man;
+            return null;
         }
 
 
         // POST: api/Manager
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("SaveManager")]
+        public void Post([FromBody]Manager m)
         {
-        }
-        
-        // PUT: api/Manager/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
+            m.Active = true;
+            db.Managers.Add(m);
+            db.SaveChanges();
         }
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [Route("RemoveManager")]
         public void Delete(int id)
         {
+            Manager man = db.Managers.Where(m => m.UserID == id).First();
+            man.Active = false;
+            db.SaveChanges();
         }
     }
 }

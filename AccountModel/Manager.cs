@@ -9,6 +9,7 @@ namespace AccountModel
     {
         [Key]
         public int ID { get; set; }
+        public int UserID { get; set; }
         public string Name { get; set; }
         public bool Active { get; set; }
     }

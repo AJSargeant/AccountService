@@ -18,16 +18,6 @@ namespace AccountManagement
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            User u = new User()
-            {
-                Name = "user",
-                ID = 1,
-                Active = true
-            };
-
-            db.Users.Add(u);
-            db.SaveChanges();
-
             return db.Users;
 
         }
@@ -36,13 +26,15 @@ namespace AccountManagement
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            return db.Users.Where(u => u.ID == id).FirstOrDefault();
+            return db.Users.Where(u => u.UserID == id).FirstOrDefault();
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]User u)
         {
+            db.Users.Add(u);
+            db.SaveChanges();
         }
 
         // PUT api/values/5

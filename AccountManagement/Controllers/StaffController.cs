@@ -17,24 +17,34 @@ namespace AccountManagement.Controllers
         [HttpGet]
         public IEnumerable<Staff> Get()
         {
-            Staff s = new Staff()
-            {
-                Name = "Staff",
-                ID = 1,
-                Active = true
-            };
-
-            db.Staff.Add(s);
-            db.SaveChanges();
-
             return db.Staff;
         }
 
         [HttpGet("{id}")]
         public Staff Get(int id)
         {
-            return db.Staff.Where(s => s.ID == id).FirstOrDefault();
+            return db.Staff.Where(s => s.UserID == id).FirstOrDefault();
         }
 
+
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody]Staff s)
+        {
+            db.Staff.Add(s);
+            db.SaveChanges();
+        }
+
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody]string value)
+        {
+        }
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
     }
 }
