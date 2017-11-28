@@ -29,7 +29,7 @@ namespace AccountManagement.Controllers
         [HttpGet("{id}", Name = "Get")]
         public Manager Get(int id)
         {
-            Manager man = db.Managers.Where(m => m.UserID == id).FirstOrDefault();
+            Manager man = db.Managers.FirstOrDefault(m => m.UserID == id);
             if (man != null)
                 if(man.Active)
                     return man;
@@ -52,9 +52,13 @@ namespace AccountManagement.Controllers
         [Route("RemoveManager")]
         public void Delete(int id)
         {
-            Manager man = db.Managers.Where(m => m.UserID == id).First();
-            man.Active = false;
-            db.SaveChanges();
+            Manager man = db.Managers.FirstOrDefault(m => m.UserID == id);
+            if (man != null)
+                if (man.Active)
+                {
+                    man.Active = false;
+                    db.SaveChanges();
+                }
         }
     }
 }

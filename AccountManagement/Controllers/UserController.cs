@@ -12,41 +12,51 @@ namespace AccountManagement
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        AccountContext db = new AccountContext();
+        AccountContext db;
+
+        public UserController(AccountContext context)
+        { db = context; }
 
         // GET: api/values
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return db.Users;
-
+            return db.Users.Where(u => u.Active);
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            return db.Users.Where(u => u.UserID == id).FirstOrDefault();
+            User user = db.Users.FirstOrDefault(u => u.UserID == id);
+            if (user != null)
+                if (user.Active)
+                    return user;
+            return null;
         }
 
         // POST api/values
         [HttpPost]
         public void Post([FromBody]User u)
         {
+            u.Active = true;
+            u.Authorised = false;
             db.Users.Add(u);
             db.SaveChanges();
         }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
+        
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            User user = db.Users.FirstOrDefault(u => u.UserID == id);
+            if (user != null)
+                if (user.Active)
+                {
+                    user.Active = false;
+                    user.Authorised = false;
+                    db.SaveChanges();
+                }
         }
     }
 }
