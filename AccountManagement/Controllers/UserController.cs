@@ -37,6 +37,7 @@ namespace AccountManagement
 
         // POST api/values
         [HttpPost]
+        [Route("SaveUser")]
         public void Post([FromBody]User u)
         {
             u.Active = true;
@@ -47,6 +48,7 @@ namespace AccountManagement
         
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [Route("RemoveUser")]
         public void Delete(int id)
         {
             User user = db.Users.FirstOrDefault(u => u.UserID == id);

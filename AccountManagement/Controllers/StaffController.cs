@@ -32,6 +32,7 @@ namespace AccountManagement.Controllers
 
         // POST api/values
         [HttpPost]
+        [Route("SaveStaff")]
         public void Post([FromBody]Staff s)
         {
             db.Staff.Add(s);
@@ -40,6 +41,7 @@ namespace AccountManagement.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [Route("RemoveStaff")]
         public void Delete(int id)
         {
             Staff staff = db.Staff.FirstOrDefault(s => s.UserID == id);
