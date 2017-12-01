@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AccountModel;
 using Microsoft.EntityFrameworkCore;
+using AccountModel;
 
 namespace Accounts
 {
