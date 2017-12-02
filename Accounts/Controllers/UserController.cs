@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using AccountModel;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Net.Http;
 
 namespace Accounts.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         AccountContext db;
@@ -19,42 +23,101 @@ namespace Accounts.Controllers
             db = context;
         }
 
+        public async Task<ActionResult> ChangeAuthorisation(int id)
+        {
+            if (User.IsInRole("Staff") || User.IsInRole("Administrator"))
+            {
+                User u = db.Users.Single(use => use.UserID == id);
+
+                u.Authorised = !u.Authorised;
+                db.SaveChanges();
+
+                await PostToAuth(id, u.Authorised);
+
+                return RedirectToAction(nameof(Index));
+            }
+            return new StatusCodeResult(403);
+        }
+
+        private async Task PostToAuth(int id, bool auth)
+        {
+            HttpClient client = new HttpClient()
+            {
+                BaseAddress = new Uri("http://localhost:57520")
+            };
+
+            var values = new Dictionary<string, string>();
+            values.Add("UserID", id.ToString());
+            values.Add("Authorisation Status", auth.ToString());
+            await client.PostAsync(client.BaseAddress.ToString(),new FormUrlEncodedContent(values));
+        }
+
         // GET: User
         [HttpGet]
         public ActionResult Index()
         {
-            return View(db.Users.Where(u => u.Active));
+            if(User.IsInRole("Staff")||User.IsInRole("Administrator"))
+                return View(db.Users.Where(u => u.Active));
+            return new StatusCodeResult(403);
         }
 
-        // GET: User/Details/5
+        // GET: User/Profile/5
         [HttpGet]
-        public ActionResult Details(int id)
+        public ActionResult Profile(int id)
         {
-            return View(db.Users.Single(u => u.UserID == id && u.Active));
+            User u = db.Users.SingleOrDefault(user => user.UserID == id && user.Active);
+            if (u == null)
+                return new StatusCodeResult(404);
+
+            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (UserID == id || User.IsInRole("Staff") || User.IsInRole("Administrator"))
+                return View(u);
+            
+            return new StatusCodeResult(403);
         }
 
         // GET: User/Edit/5
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult EditProfile(int id)
         {
-            return View();
+            User u = db.Users.Single(user => user.UserID == id && user.Active);
+            if (u == null)
+                return new StatusCodeResult(404);
+
+            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (UserID == id)
+                return View(u);
+
+            return new StatusCodeResult(403);
         }
 
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult EditProfile(User u)
         {
-            try
-            {
-                // TODO: Add update logic here
+            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            if (UserID == u.ID)
             {
-                return View();
+                try
+                {
+                    User use = db.Users.Single(user => user.UserID == u.ID);
+
+                    use.Name = u.Name;
+                    use.Email = u.Email;
+                    db.SaveChanges();
+
+                    return RedirectToAction(nameof(Profile),new { id = UserID });
+                }
+                catch
+                {
+                    return View(u);
+                }
             }
+            return new StatusCodeResult(403);
         }
     }
 }
