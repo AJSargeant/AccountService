@@ -76,7 +76,7 @@ namespace Accounts
                         var claims = new Claim[] {
                             new Claim(ClaimTypes.NameIdentifier, "7"),
                             new Claim(ClaimTypes.Name, "Joe"),
-                            new Claim(ClaimTypes.Role, "Administrator")
+                            new Claim(ClaimTypes.Role, "User")
                         };
 
                         var token = new JwtSecurityToken(

@@ -99,7 +99,7 @@ namespace Accounts.Controllers
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProfilePost([FromBody]User u)
+        public ActionResult EditProfilePost(User u)
         {
             string UserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
