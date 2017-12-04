@@ -34,7 +34,13 @@
 </div>
 <div>
     @{if (!User.IsInRole("Staff") && !User.IsInRole("Administrator"))
-        { @Html.ActionLink("Edit Profile", "EditProfile", new { id = Model.UserID }); }
-        else { @Html.ActionLink("Back to List","Index"); }
+        { 
+            @Html.ActionLink("Edit Profile", "EditProfile", new { id = Model.UserID });
+        }
+        else
+        {
+            @Html.ActionLink("Back to List","Index");
+        }
     }
+     | @Html.ActionLink("View Messages", "ViewMessages", new { id = Model.UserID })
 </div>

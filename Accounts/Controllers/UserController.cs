@@ -31,8 +31,11 @@ namespace Accounts.Controllers
 
                 u.Authorised = !u.Authorised;
                 db.SaveChanges();
-
-                await PostToAuth(id, u.Authorised);
+                try
+                {
+                    await PostToAuth(id, u.Authorised);
+                }
+                catch{}
 
                 return RedirectToAction(nameof(Index));
             }
@@ -43,7 +46,7 @@ namespace Accounts.Controllers
         {
             HttpClient client = new HttpClient()
             {
-                BaseAddress = new Uri("http://localhost:57520")
+                BaseAddress = new Uri("http://localhost:51520")
             };
 
             var values = new Dictionary<string, string>();
@@ -96,7 +99,7 @@ namespace Accounts.Controllers
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProfile(User u)
+        public ActionResult EditProfilePost([FromBody]User u)
         {
             int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -115,6 +118,24 @@ namespace Accounts.Controllers
                 catch
                 {
                     return View(u);
+                }
+            }
+            return new StatusCodeResult(403);
+        }
+
+        public ActionResult ViewMessages(int id)
+        {
+            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if(UserID == id || User.IsInRole("Staff") || User.IsInRole("Administrator"))
+            {
+                try
+                {
+                    return Redirect("Http://localhost:50143/Message/MyMessages/" + id.ToString());
+                }
+                catch
+                {
+                    return new StatusCodeResult(404);
                 }
             }
             return new StatusCodeResult(403);

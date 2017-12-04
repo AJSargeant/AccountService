@@ -8,7 +8,7 @@ using AccountModel;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Accounts.Controllers.API
+namespace AccountManagement.Controllers
 {
     [Produces("application/json")]
     [Route("api/Manager")]
