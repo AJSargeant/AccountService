@@ -1,0 +1,40 @@
+﻿@model AccountModel.User
+
+<h2>Profile</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserID)
+        </dd>
+        <dt>
+            @Html.DisplayName("Can Purchase stock?")
+        </dt>
+        <dd>
+            @Html.DisplayTextFor(model => model.Authorised)
+        </dd>
+    </dl>
+</div>
+<div>
+    @{if (!User.IsInRole("Staff") && !User.IsInRole("Administrator"))
+        { @Html.ActionLink("Edit Profile", "EditProfile", new { id = Model.UserID }); }
+        else { @Html.ActionLink("Back to List","Index"); }
+    }
+</div>

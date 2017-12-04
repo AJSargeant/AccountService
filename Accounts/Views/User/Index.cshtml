@@ -1,0 +1,41 @@
+﻿@model IEnumerable<AccountModel.User>
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayName("Email Address")
+            </th>
+            <th>
+                @Html.DisplayName("Authorised?")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayTextFor(modelItem => item.Authorised)
+                </td>
+                <td>
+                    @Html.ActionLink("View Profile", "Profile", new { id = item.UserID }) | @Html.ActionLink("Change Authorisation","ChangeAuthorisation", new { id = item.UserID})
+            </tr>
+        }
+    </tbody>
+</table>
