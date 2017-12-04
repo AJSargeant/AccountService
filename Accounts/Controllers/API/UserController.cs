@@ -26,7 +26,7 @@ namespace Accounts.Controllers.API
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public User Get(string id)
         {
             User user = db.Users.FirstOrDefault(u => u.UserID == id);
             if (user != null)
@@ -49,7 +49,7 @@ namespace Accounts.Controllers.API
         // DELETE api/values/5
         [HttpDelete("{id}")]
         [Route("RemoveUser")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
             User user = db.Users.FirstOrDefault(u => u.UserID == id);
             if (user != null)

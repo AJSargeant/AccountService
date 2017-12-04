@@ -23,7 +23,7 @@ namespace Accounts.Controllers
             db = context;
         }
 
-        public async Task<ActionResult> ChangeAuthorisation(int id)
+        public async Task<ActionResult> ChangeAuthorisation(string id)
         {
             if (User.IsInRole("Staff") || User.IsInRole("Administrator"))
             {
@@ -42,7 +42,7 @@ namespace Accounts.Controllers
             return new StatusCodeResult(403);
         }
 
-        private async Task PostToAuth(int id, bool auth)
+        private async Task PostToAuth(string id, bool auth)
         {
             HttpClient client = new HttpClient()
             {
@@ -50,7 +50,7 @@ namespace Accounts.Controllers
             };
 
             var values = new Dictionary<string, string>();
-            values.Add("UserID", id.ToString());
+            values.Add("UserID", id);
             values.Add("Authorisation Status", auth.ToString());
             await client.PostAsync(client.BaseAddress.ToString(),new FormUrlEncodedContent(values));
         }
@@ -60,19 +60,19 @@ namespace Accounts.Controllers
         public ActionResult Index()
         {
             if(User.IsInRole("Staff")||User.IsInRole("Administrator"))
-                return View(db.Users.Where(u => u.Active));
+                return View(db.Users.Where(u => u.Active && u.Role == "User"));
             return new StatusCodeResult(403);
         }
 
         // GET: User/Profile/5
         [HttpGet]
-        public ActionResult Profile(int id)
+        public ActionResult Profile(string id)
         {
             User u = db.Users.SingleOrDefault(user => user.UserID == id && user.Active);
             if (u == null)
                 return new StatusCodeResult(404);
 
-            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string UserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             if (UserID == id || User.IsInRole("Staff") || User.IsInRole("Administrator"))
                 return View(u);
@@ -82,13 +82,13 @@ namespace Accounts.Controllers
 
         // GET: User/Edit/5
         [HttpGet]
-        public ActionResult EditProfile(int id)
+        public ActionResult EditProfile(string id)
         {
             User u = db.Users.Single(user => user.UserID == id && user.Active);
             if (u == null)
                 return new StatusCodeResult(404);
 
-            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string UserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             if (UserID == id)
                 return View(u);
@@ -101,13 +101,13 @@ namespace Accounts.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditProfilePost([FromBody]User u)
         {
-            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string UserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            if (UserID == u.ID)
+            if (UserID == u.UserID)
             {
                 try
                 {
-                    User use = db.Users.Single(user => user.UserID == u.ID);
+                    User use = db.Users.Single(user => user.UserID == u.UserID);
 
                     use.Name = u.Name;
                     use.Email = u.Email;
@@ -123,9 +123,9 @@ namespace Accounts.Controllers
             return new StatusCodeResult(403);
         }
 
-        public ActionResult ViewMessages(int id)
+        public ActionResult ViewMessages(string id)
         {
-            int UserID = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string UserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             if(UserID == id || User.IsInRole("Staff") || User.IsInRole("Administrator"))
             {
