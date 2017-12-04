@@ -1,5 +1,8 @@
 ﻿@model AccountModel.User
 
+
+@using (Html.BeginForm("EditProfile", "User", FormMethod.Post))
+{
 <h4>User</h4>
 <hr />
 <div class="row">
@@ -26,4 +29,4 @@
 <div>
     @Html.ActionLink("Back to Profile", "Profile", new { id = Model.UserID })
 </div>
-
+}

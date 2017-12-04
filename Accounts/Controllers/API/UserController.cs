@@ -24,17 +24,11 @@ namespace Accounts.Controllers.API
             return db.Users.Where(u => u.Active);
         }
 
-        [HttpGet("{role}")]
-        public IEnumerable<User> Get(string role)
-        {
-            return db.Users.Where(u => u.Active && u.Role == role);
-        }
-
         // GET api/values/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public User Get(string id)
         {
-            User user = db.Users.FirstOrDefault(u => u.UserID == id.ToString());
+            User user = db.Users.FirstOrDefault(u => u.UserID == id);
             if (user != null)
                 if (user.Active)
                     return user;
@@ -55,9 +49,9 @@ namespace Accounts.Controllers.API
         // DELETE api/values/5
         [HttpDelete("{id}")]
         [Route("RemoveUser")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
-            User user = db.Users.FirstOrDefault(u => u.UserID == id.ToString());
+            User user = db.Users.FirstOrDefault(u => u.UserID == id);
             if (user != null)
                 if (user.Active)
                 {

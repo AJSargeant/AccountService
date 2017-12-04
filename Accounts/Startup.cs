@@ -74,9 +74,9 @@ namespace Accounts
                     {
                         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MY TOP SECRET TEST KEY"));
                         var claims = new Claim[] {
-                            new Claim(ClaimTypes.NameIdentifier, "7"),
-                            new Claim(ClaimTypes.Name, "Joe"),
-                            new Claim(ClaimTypes.Role, "Administrator")
+                            new Claim(ClaimTypes.NameIdentifier, "boris"),
+                            new Claim(ClaimTypes.Name, "Burt"),
+                            new Claim(ClaimTypes.Role, "User")
                         };
 
                         var token = new JwtSecurityToken(

@@ -13,9 +13,6 @@ namespace AccountModel
             Database.EnsureCreated();
         }
         public AccountContext() : base(){}
-        
-        public DbSet<Manager> Managers { get; set; }
-        public DbSet<Staff> Staff { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }
