@@ -46,8 +46,9 @@ namespace Accounts.Controllers
         {
             HttpClient client = new HttpClient()
             {
-                BaseAddress = new Uri("http://localhost:51520")
+                BaseAddress = new Uri("http://localhost:58253/Account/RecieveAuthStatus")
             };
+            //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
             var values = new Dictionary<string, string>();
             values.Add("UserID", id);

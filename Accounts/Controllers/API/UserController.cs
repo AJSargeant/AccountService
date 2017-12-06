@@ -38,12 +38,17 @@ namespace Accounts.Controllers.API
         // POST api/values
         [HttpPost]
         [Route("SaveUser")]
-        public void Post([FromBody]User u)
+        public void Post([FromBody]Models.AuthUser au)
         {
             try
             {
-                u.Active = true;
-                u.Authorised = false;
+                User u = new User
+                {
+                    UserID = au.ID,
+                    Email = au.Email,
+                    Active = true,
+                    Authorised = false
+                };
                 db.Users.Add(u);
                 db.SaveChanges();
             }
