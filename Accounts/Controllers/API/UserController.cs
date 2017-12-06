@@ -40,10 +40,14 @@ namespace Accounts.Controllers.API
         [Route("SaveUser")]
         public void Post([FromBody]User u)
         {
-            u.Active = true;
-            u.Authorised = false;
-            db.Users.Add(u);
-            db.SaveChanges();
+            try
+            {
+                u.Active = true;
+                u.Authorised = false;
+                db.Users.Add(u);
+                db.SaveChanges();
+            }
+            catch { }
         }
         
         // DELETE api/values/5

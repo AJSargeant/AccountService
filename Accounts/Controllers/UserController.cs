@@ -51,7 +51,7 @@ namespace Accounts.Controllers
 
             var values = new Dictionary<string, string>();
             values.Add("UserID", id);
-            values.Add("Authorisation Status", auth.ToString());
+            values.Add("AuthorisationStatus", auth.ToString());
             await client.PostAsync(client.BaseAddress.ToString(),new FormUrlEncodedContent(values));
         }
 
