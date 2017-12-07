@@ -13,6 +13,6 @@ namespace AccountModel
             Database.EnsureCreated();
         }
         public AccountContext() : base(){}
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }
